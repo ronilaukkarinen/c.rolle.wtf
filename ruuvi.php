@@ -1,3 +1,15 @@
+<?php
+// CACHE START
+$cachefile = 'ruuvi-cached.html';
+$cachetime = 300;
+if ( file_exists( $cachefile ) && time() - $cachetime < filemtime( $cachefile ) ) {
+	// echo '<!-- Amazing hand crafted super cache by rolle, generated ' . date( 'H:i', filemtime( $cachefile ) ) . ' -->';
+	include( $cachefile );
+	exit;
+}
+ob_start();
+// CACHE START
+?>
 <!DOCTYPE html>
 <html lang="fi">
   <head>
@@ -20,8 +32,7 @@ $client = new InfluxDB\Client($host, $port);
 $database = InfluxDB\Client::fromDSN(sprintf('influxdb://user:pass@%s:%s/%s', $host, $port, $dbname));
 
 $database = $client->selectDB('ruuvi');
-$result = $database->query('SELECT LAST(temperature) FROM ruuvi_measurements GROUP BY 
-TIME(10m), "name" ORDER BY DESC LIMIT 1');
+$result = $database->query('SELECT LAST(temperature) FROM ruuvi_measurements GROUP BY TIME(10m), "name" ORDER BY DESC LIMIT 1');
 $points = $result->getPoints();
 
 $sauna_temp = $points[0]['last'];
@@ -45,8 +56,7 @@ $olohuone_rawtime = strtotime($points[3]['time'] . ' UTC');
 $olohuone_time = date("H:i", $olohuone_rawtime);
 
 //echo '<div class="temps">';
-//echo '<span class="parveke"><b>' . $parveke_name . '</b>: ' . $parveke_temp . ' °C, 
-</span>';
+//echo '<span class="parveke"><b>' . $parveke_name . '</b>: ' . $parveke_temp . ' °C, </span>';
 //echo '<span class="makuuhuone"><b>' . $makuuhuone_name . '</b>: ' . $makuuhuone_temp . ' °C, </span>';
 //echo '<span class="olohuone"><b>' . $olohuone_name . '</b>: ' . $olohuone_temp . ' °C, </span>';
 //echo '<span class="sauna"><b>' . $sauna_name . '</b>: ' . $sauna_temp . ' °C</span><span class="measured-time"> (Mitattu klo ' . $parveke_time . ')</span>';
@@ -58,3 +68,10 @@ echo '<div class="temps">Ulkona: ' . $makuuhuone_temp . ' °C, ' . $parveke_name
 
 </body>
 </html>
+<?php
+// CACHE END
+$fp = fopen( $cachefile, 'w' );
+fwrite( $fp, ob_get_contents() );
+fclose( $fp );
+ob_end_flush();
+// CACHE END
