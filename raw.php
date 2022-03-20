@@ -13,7 +13,7 @@ $client = new InfluxDB\Client($host, $port);
 $database = InfluxDB\Client::fromDSN(sprintf('influxdb://user:pass@%s:%s/%s', $host, $port, $dbname));
 
 $database = $client->selectDB('ruuvi');
-$result = $database->query('SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 1h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1');
+$result = $database->query('SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 2h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1');
 $points = $result->getPoints();
 
 // Tags

@@ -2,10 +2,9 @@
 <!doctype html>
 <html>
 <head>
-  
 <title>Lämpötilat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script>
 jQuery( document ).ready(function() {
