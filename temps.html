@@ -1,0 +1,96 @@
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+<script>
+  const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+  };
+
+  const config = {
+    type: 'line',
+    data: data,
+    options: {}
+  };
+</script>
+<script>
+$(document).ready(function(){
+
+  var mc = {
+    '-9000to-10': 'freezing',
+    '-10to0'    : 'below-zero',
+    '0to15'     : 'warm-ish',
+    '15to21.99' : 'just-right',
+    '22to900'   : 'warming', 
+    '25to900'   : 'red',
+  };
+
+function between(x, min, max) {
+  return x >= min && x <= max;
+}
+
+var dc;
+var first;
+var second;
+var th;
+
+$('.value').each(function(index) {
+    th = $(this);
+    dc = parseInt($(this).attr('data-color'), 10);
+
+    $.each(mc, function(name, value) {
+
+      first = parseInt(name.split('to')[0],10);
+      second = parseInt(name.split('to')[1],10);
+      // console.log(between(dc, first, second));
+
+      if ( between(dc, first, second) ) {
+        th.addClass(value);
+      }
+
+    });
+  });
+});
+</script>
+
+<div class="temp">
+  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=12">
+    <span class="value" data-color="18.24">18.24 <span class="unit">°C</span></span>
+    <span class="label">Parveke</span>
+  </a>
+</div>
+
+<div class="temp">
+  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=10">
+    <span class="value" data-color="25.63">25.63 <span class="unit">°C</span></span>
+    <span class="label">Makuuhuone</span>
+  </a>
+</div>
+
+<div class="temp">
+  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=11">
+    <span class="value" data-color="24.89">24.89 <span class="unit">°C</span></span>
+    <span class="label">Olohuone</span>
+  </a>
+</div>
+
+<div class="temp">
+  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=13">
+    <span class="value" data-color="24.99">24.99 <span class="unit">°C</span></span>
+    <span class="label">Sauna</span>
+  </a>
+</div>
+

@@ -14,9 +14,9 @@ jQuery( document ).ready(function() {
   jQuery('.temps').fadeIn();
   jQuery('.temps').load('https://c.peikko.us/temps.php');
 
-  var refreshId = setInterval(function() {
-    jQuery(".temps").load('https://c.peikko.us/temps.php');
-  }, 1000);
+  // var refreshId = setInterval(function() {
+  //   jQuery(".temps").load('https://c.peikko.us/temps.html');
+  // }, 1000);
 });
 </script>
 
@@ -27,12 +27,24 @@ body {
   font-family: 'Inter', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
 }
 
+a {
+  color: #fff;
+  text-decoration: none;
+  display: grid;
+  transition: 200ms all;
+}
+
+a:hover {
+  opacity: .6;
+}
+
 .temp > span {
   display: block;
   line-height: 1.2;
   margin: .5rem 0;
 }
 
+.lastupdated,
 .temp {
   padding: 20px 50px;
 }
@@ -45,6 +57,11 @@ body {
 .temp .label {
   font-size: 14px;
   opacity: .5;
+}
+
+.lastupdated {
+  font-size: 12px;
+  opacity: .4;
 }
 
 .temp .unit {
