@@ -96,6 +96,7 @@ a:hover {
 }
 
 @media (max-width: 500px) {
+  .lastupdated,
   .temp {
     padding: 20px 15px;
   }
