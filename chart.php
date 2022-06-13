@@ -47,6 +47,7 @@ a:hover {
 .lastupdated,
 .temp {
   padding: 20px 50px;
+  max-width: 320px;
 }
 
 .temp .value {
