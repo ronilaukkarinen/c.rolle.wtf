@@ -12,16 +12,6 @@ ini_set('display_startup_errors', 0);
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script>
-jQuery( document ).ready(function() {
-  jQuery('.temps').fadeIn();
-  jQuery('.temps').load('https://c.peikko.us/temps.php');
-
-  // var refreshId = setInterval(function() {
-  //   jQuery(".temps").load('https://c.peikko.us/temps.html');
-  // }, 1000);
-});
-</script>
 
 <style type="text/css">
 body {
@@ -112,6 +102,8 @@ a:hover {
 
 </head>
 <body>
-  <div class="temps"></div>
+  <div class="temps">
+    <?php include 'temps-raw.php'; ?>
+  </div>
 </body>
 </html>
