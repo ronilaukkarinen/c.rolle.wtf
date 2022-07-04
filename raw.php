@@ -1,4 +1,3 @@
-<?php // phpcs:disable ?>
 <?php
 date_default_timezone_set('Europe/Helsinki');
 ini_set('display_errors', 1);
@@ -6,14 +5,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require __DIR__ . '/vendor/autoload.php';
-$host = 'localhost';
-$port = '8086';
-$dbname = 'ruuvi';
-$client = new InfluxDB\Client($host, $port);
-$database = InfluxDB\Client::fromDSN(sprintf('influxdb://user:pass@%s:%s/%s', $host, $port, $dbname));
-
+$database = InfluxDB\Client::fromDSN(sprintf('influxdb://rolle:FiZG24rG4wmgYqL8LqoxRX2fr37mhs@%s:%s/%s', 'localhost', 8086, 'ruuvi'));
+$client = $database->getClient();
 $database = $client->selectDB('ruuvi');
 $result = $database->query('SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 2h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1');
+
 $points = $result->getPoints();
 
 // Tags
@@ -43,4 +39,4 @@ $olohuone_name = $olohuone['name'];
 $olohuone_rawtime = strtotime($olohuone['time'] . ' UTC');
 $olohuone_time = date("H:i:s", $olohuone_rawtime);
 
-echo '' . $parveke_name . ': ' . $parveke_temp . ' °C, ' . $makuuhuone_name . ': ' . $makuuhuone_temp . ' °C, ' . $olohuone_name . ': ' . $olohuone_temp . ' °C, ' . $sauna_name . ': ' . $sauna_temp . ' °C, Mitattu: '. date('d.m.Y H:i:s');
+echo '' . $parveke_name . ': ' . $parveke_temp . ' °C, ' . $makuuhuone_name . ': ' . $makuuhuone_temp . ' °C, ' . $olohuone_name . ': ' . $olohuone_temp . ' °C, ' . $sauna_name . ': ' . $sauna_temp . ' °C, Mitattu: '. date('d.m.Y H:i:s') . '';

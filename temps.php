@@ -2,16 +2,6 @@
 date_default_timezone_set('Europe/Helsinki');
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
-$cachefile = 'temps.html';
-$cachetime = 120;
-if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
-    include($cachefile);
-    $lastupdated = date('H:i', filemtime($cachefile));
-    echo "<!-- Amazing hand crafted super cache, generated ". $lastupdated ." -->";
-    echo '<p class="lastupdated">Viimeksi päivitetty klo '. $lastupdated .'</p>';
-    exit;
-}
-ob_start('minify_output');
 ?>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
@@ -49,7 +39,7 @@ $(document).ready(function(){
     '-10to0'    : 'below-zero',
     '0to15'     : 'warm-ish',
     '15to21.99' : 'just-right',
-    '22to900'   : 'warming', 
+    '22to900'   : 'warming',
     '25to900'   : 'red',
   };
 
@@ -87,15 +77,14 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require __DIR__ . '/vendor/autoload.php';
-$host = 'localhost';
-$port = '8086';
-$dbname = 'ruuvi';
-$client = new InfluxDB\Client($host, $port);
-$database = InfluxDB\Client::fromDSN(sprintf('influxdb://user:pass@%s:%s/%s', $host, $port, $dbname));
-
+$database = InfluxDB\Client::fromDSN(sprintf('influxdb://rolle:FiZG24rG4wmgYqL8LqoxRX2fr37mhs@%s:%s/%s', 'localhost', 8086, 'ruuvi'));
+$client = $database->getClient();
 $database = $client->selectDB('ruuvi');
 $result = $database->query('SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 2h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1');
+
 $points = $result->getPoints();
+
+if (empty($points)) echo '<p style="margin:0;color:#ec1b4b;padding:20px;font-size:32px;font-weight:bolder;">Jokin meni vikaan.</p>';
 
 // Tags
 $sauna = $points[0];
@@ -122,39 +111,33 @@ $parveke_time = date("H:i:s", $parveke_rawtime);
 $olohuone_temp = $olohuone['last'];
 $olohuone_name = $olohuone['name'];
 $olohuone_rawtime = strtotime($olohuone['time'] . ' UTC');
-$olohuone_time = date("H:i:s", $olohuone_rawtime); 
+$olohuone_time = date("H:i:s", $olohuone_rawtime);
 ?>
 
 <div class="temp">
-  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=12">
+  <a href="https://station.ruuvi.com/#/C9:35:08:07:91:89">
     <span class="value" data-color="<?php echo $parveke_temp; ?>"><?php echo $parveke_temp; ?> <span class="unit">°C</span></span>
     <span class="label"><?php echo $parveke_name; ?></span>
   </a>
 </div>
 
 <div class="temp">
-  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=10">
+  <a href="https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE">
     <span class="value" data-color="<?php echo $makuuhuone_temp; ?>"><?php echo $makuuhuone_temp; ?> <span class="unit">°C</span></span>
     <span class="label"><?php echo $makuuhuone_name; ?></span>
   </a>
 </div>
 
 <div class="temp">
-  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=11">
+  <a href="https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA">
     <span class="value" data-color="<?php echo $olohuone_temp; ?>"><?php echo $olohuone_temp; ?> <span class="unit">°C</span></span>
     <span class="label"><?php echo  $olohuone_name; ?></span>
   </a>
 </div>
 
 <div class="temp">
-  <a href="https://grafana.peikko.us/d/2JRw-Idnz/freedom-street?orgId=1&viewPanel=13">
+  <a href="https://station.ruuvi.com/#/D0:25:AB:39:9E:F1">
     <span class="value" data-color="<?php echo $sauna_temp; ?>"><?php echo $sauna_temp; ?> <span class="unit">°C</span></span>
     <span class="label"><?php echo $sauna_name; ?></span>
   </a>
 </div>
-
-<?php
-$fp = fopen($cachefile, 'w');
-fwrite($fp, ob_get_contents());
-fclose($fp);
-ob_end_flush();

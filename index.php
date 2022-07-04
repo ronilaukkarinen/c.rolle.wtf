@@ -1,58 +1,137 @@
-<?php // phpcs:disable ?>
-<!DOCTYPE html>
-<html lang="fi">
-  <head>
-    <meta charset="UTF-8">
-    <title>Ruuvi raw data</title>
-  </head>
-<body>
-
-<?php
-date_default_timezone_set('Europe/Helsinki');
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require __DIR__ . '/vendor/autoload.php';
-$host = 'localhost';
-$port = '8086';
-$dbname = 'ruuvi';
-$client = new InfluxDB\Client($host, $port);
-$database = InfluxDB\Client::fromDSN(sprintf('influxdb://user:pass@%s:%s/%s', $host, $port, $dbname));
-
-$database = $client->selectDB('ruuvi');
-$result = $database->query('SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 1h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1');
-$points = $result->getPoints();
-
-// Tags
-$sauna = $points[0];
-$parveke = $points[1];
-$olohuone = $points[2];
-$makuuhuone = $points[3];
-
-// Display
-$sauna_temp = $sauna['last'];
-$sauna_name = $sauna['name'];
-$sauna_rawtime = strtotime($sauna['time'] . ' UTC');
-$sauna_time = date("H:i:s", $sauna_rawtime);
-
-$makuuhuone_temp = $makuuhuone['last'];
-$makuuhuone_name = $makuuhuone['name'];
-$makuuhuone_rawtime = strtotime($makuuhuone['time'] . ' UTC');
-$makuuhuone_time = date("H:i:ss", $makuuhuone_rawtime);
-
-$parveke_temp = $parveke['last'];
-$parveke_name = $parveke['name'];
-$parveke_rawtime = strtotime($parveke['time'] . ' UTC');
-$parveke_time = date("H:i:s", $parveke_rawtime);
-
-$olohuone_temp = $olohuone['last'];
-$olohuone_name = $olohuone['name'];
-$olohuone_rawtime = strtotime($olohuone['time'] . ' UTC');
-$olohuone_time = date("H:i:s", $olohuone_rawtime);
-
-echo '<div class="temps">' . $parveke_name . ': ' . $parveke_temp . ' °C, ' . $makuuhuone_name . ': ' . $makuuhuone_temp . ' °C, ' . $olohuone_name . ': ' . $olohuone_temp . ' °C, ' . $sauna_name . ': ' . $sauna_temp . ' °C, Mitattu: '. date('d.m.Y H:i:s') . '</div>';
+<?php // phpcs:disable
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 ?>
+<!doctype html>
+<html>
+<head>
+<title>Lämpötilat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<style type="text/css">
+body {
+  background-color: #0d1117;
+  color: #f0f6fc;
+  font-family: 'Inter', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+}
 
+a {
+  color: #fff;
+  text-decoration: none;
+  display: grid;
+  transition: 200ms all;
+}
+
+a:hover {
+  opacity: .6;
+}
+
+.temp > span {
+  display: block;
+  line-height: 1.2;
+  margin: .5rem 0;
+}
+
+.lastupdated,
+.temp {
+  padding: 20px 50px;
+  max-width: 320px;
+}
+
+.temp .value {
+  font-size: 80px;
+  font-weight: 700;
+}
+
+.temp .label {
+  font-size: 14px;
+  opacity: .5;
+}
+
+.lastupdated {
+  font-size: 12px;
+}
+
+.lastupdated .text {
+  opacity: .4;
+}
+
+.lastupdated .time {
+  opacity: .6;
+}
+
+.temp .unit {
+  font-size: 32px;
+  opacity: .7;
+  font-weight: 400;
+}
+
+.freezing {
+  color: #96cde4;
+}
+
+.below-zero {
+  color: #1b8aec;
+}
+
+.warm-ish {
+  color: #1bec9f;
+}
+
+.warming {
+  color: #ea7662;
+}
+
+.red {
+  color: #ec1b4b;
+}
+
+.just-right {
+  color: #1ccc5c;
+}
+
+@media (max-width: 500px) {
+  .lastupdated,
+  .temp {
+    padding: 20px 15px;
+  }
+
+  .temp .value {
+    font-size: 62px;
+  }
+}
+</style>
+
+</head>
+<body>
+  <div class="temps"></div>
+
+  <p class="lastupdated"><span class="text">Viimeksi päivitetty</span> <span class="time"><span class="timestamp" id="value">0</span> s</span> <span class="text">sitten</span></p>
+
+<script>
+var obj = document.getElementById('value');
+var current = parseInt(obj.innerHTML);
+var secondtimer = setInterval(function(){
+  current++;
+  obj.innerHTML = current;
+}, 1000);
+
+jQuery( document ).ready(function() {
+  const seconds = 5;
+
+  jQuery('.temps').fadeIn();
+  jQuery('.temps').load('https://c.rolle.wtf/temps.php');
+
+  var refreshId = setInterval(function() {
+    jQuery(".temps").load('https://c.rolle.wtf/temps.php');
+    document.getElementById('value').innerHTML = '0';
+    current = 0
+  }, seconds * 1000);
+});
+</script>
 </body>
 </html>
