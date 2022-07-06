@@ -111,7 +111,7 @@ $olohuone_time = date( 'H:i:s', $olohuone_rawtime );
 
 <?php if ( ! empty( $parveke_temp ) ) : ?>
   <div class="temp">
-    <a href="https://station.ruuvi.com/#/C9:35:08:07:91:89">
+    <a href="https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA">
       <span class="value" data-color="<?php echo $parveke_temp; ?>"><?php echo $parveke_temp; ?> <span class="unit">°C</span></span>
       <span class="label"><?php echo $parveke_name; ?></span>
     </a>
@@ -120,7 +120,7 @@ $olohuone_time = date( 'H:i:s', $olohuone_rawtime );
 
 <?php if ( ! empty( $makuuhuone_name ) ) : ?>
   <div class="temp">
-    <a href="https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE">
+    <a href="https://station.ruuvi.com/#/D0:25:AB:39:9E:F1">
       <span class="value" data-color="<?php echo $makuuhuone_temp; ?>"><?php echo $makuuhuone_temp; ?> <span class="unit">°C</span></span>
       <span class="label"><?php echo $makuuhuone_name; ?></span>
     </a>
@@ -129,7 +129,7 @@ $olohuone_time = date( 'H:i:s', $olohuone_rawtime );
 
 <?php if ( ! empty( $olohuone_name ) ) : ?>
   <div class="temp">
-    <a href="https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA">
+    <a href="https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE">
       <span class="value" data-color="<?php echo $olohuone_temp; ?>"><?php echo $olohuone_temp; ?> <span class="unit">°C</span></span>
       <span class="label"><?php echo $olohuone_name; ?></span>
     </a>
@@ -138,7 +138,7 @@ $olohuone_time = date( 'H:i:s', $olohuone_rawtime );
 
 <?php if ( ! empty( $sauna_name ) ) : ?>
   <div class="temp">
-    <a href="https://station.ruuvi.com/#/D0:25:AB:39:9E:F1">
+    <a href="https://station.ruuvi.com/#/C9:35:08:07:91:89">
       <span class="value" data-color="<?php echo $sauna_temp; ?>"><?php echo $sauna_temp; ?> <span class="unit">°C</span></span>
       <span class="label"><?php echo $sauna_name; ?></span>
     </a>
