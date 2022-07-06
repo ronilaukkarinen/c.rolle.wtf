@@ -1,7 +1,7 @@
 <?php
-date_default_timezone_set('Europe/Helsinki');
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
+date_default_timezone_set( 'Europe/Helsinki' );
+ini_set( 'display_errors', 0 );
+ini_set( 'display_startup_errors', 0 );
 ?>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
@@ -71,20 +71,15 @@ $('.value').each(function(index) {
 });
 </script>
 <?php
-date_default_timezone_set('Europe/Helsinki');
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require __DIR__ . '/vendor/autoload.php';
-$database = InfluxDB\Client::fromDSN(sprintf('influxdb://rolle:FiZG24rG4wmgYqL8LqoxRX2fr37mhs@%s:%s/%s', 'localhost', 8086, 'ruuvi'));
+$database = InfluxDB\Client::fromDSN( sprintf( 'influxdb://rolle:FiZG24rG4wmgYqL8LqoxRX2fr37mhs@%s:%s/%s', 'localhost', 8086, 'ruuvi' ) );
 $client = $database->getClient();
-$database = $client->selectDB('ruuvi');
-$result = $database->query('SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 2h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1');
+$database = $client->selectDB( 'ruuvi' );
+$result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 2h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1' );
 
 $points = $result->getPoints();
 
-if (empty($points)) echo '<p style="margin:0;color:#ec1b4b;padding:20px;font-size:32px;font-weight:bolder;">Jokin meni vikaan.</p>';
+if ( empty( $points ) ) echo '<p style="margin:0;color:#ec1b4b;padding:20px;font-size:32px;font-weight:bolder;">Jokin meni vikaan.</p>';
 
 // Tags
 $sauna = $points[0];
@@ -95,23 +90,23 @@ $makuuhuone = $points[3];
 // Display
 $sauna_temp = $sauna['last'];
 $sauna_name = $sauna['name'];
-$sauna_rawtime = strtotime($sauna['time'] . ' UTC');
-$sauna_time = date("H:i:s", $sauna_rawtime);
+$sauna_rawtime = strtotime( $sauna['time'] . ' UTC' );
+$sauna_time = date( 'H:i:s', $sauna_rawtime );
 
 $makuuhuone_temp = $makuuhuone['last'];
 $makuuhuone_name = $makuuhuone['name'];
-$makuuhuone_rawtime = strtotime($makuuhuone['time'] . ' UTC');
-$makuuhuone_time = date("H:i:ss", $makuuhuone_rawtime);
+$makuuhuone_rawtime = strtotime( $makuuhuone['time'] . ' UTC' );
+$makuuhuone_time = date( 'H:i:ss', $makuuhuone_rawtime );
 
 $parveke_temp = $parveke['last'];
 $parveke_name = $parveke['name'];
-$parveke_rawtime = strtotime($parveke['time'] . ' UTC');
-$parveke_time = date("H:i:s", $parveke_rawtime);
+$parveke_rawtime = strtotime( $parveke['time'] . ' UTC' );
+$parveke_time = date( 'H:i:s', $parveke_rawtime );
 
 $olohuone_temp = $olohuone['last'];
 $olohuone_name = $olohuone['name'];
-$olohuone_rawtime = strtotime($olohuone['time'] . ' UTC');
-$olohuone_time = date("H:i:s", $olohuone_rawtime);
+$olohuone_rawtime = strtotime( $olohuone['time'] . ' UTC' );
+$olohuone_time = date( 'H:i:s', $olohuone_rawtime );
 ?>
 
 <div class="temp">
@@ -131,7 +126,7 @@ $olohuone_time = date("H:i:s", $olohuone_rawtime);
 <div class="temp">
   <a href="https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA">
     <span class="value" data-color="<?php echo $olohuone_temp; ?>"><?php echo $olohuone_temp; ?> <span class="unit">°C</span></span>
-    <span class="label"><?php echo  $olohuone_name; ?></span>
+    <span class="label"><?php echo $olohuone_name; ?></span>
   </a>
 </div>
 
