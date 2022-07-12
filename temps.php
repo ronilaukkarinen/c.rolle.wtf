@@ -79,68 +79,43 @@ $result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WH
 
 $points = $result->getPoints();
 
-if ( empty( $points ) ) echo '<p style="margin:0;color:#ec1b4b;padding:20px;font-size:32px;font-weight:bolder;">Jokin meni vikaan.</p>';
+// If empty, print error and don't continue
+if ( empty( $points ) ) {
+  echo '<p style="margin:0;color:#ec1b4b;padding:20px;font-size:32px;font-weight:bolder;">Jokin meni vikaan.</p>';
+  return;
+}
 
-// Tags
-$sauna = $points[0];
-$parveke = $points[1];
-$olohuone = $points[2];
-$makuuhuone = $points[3];
+// Loop through tags
+sort( $points );
+foreach ( $points as $point ) {
+  $ruuvitag_temp = round( $point['last'], 2 );
+  $ruuvitag_name = $point['name'];
+  $ruuvitag_timestamp = strtotime( $point['time'] . ' UTC' );
+  $ruuvitag_time = date( 'H:i:s', $timestamp );
 
-// Display
-$sauna_temp = $sauna['last'];
-$sauna_name = $sauna['name'];
-$sauna_rawtime = strtotime( $sauna['time'] . ' UTC' );
-$sauna_time = date( 'H:i:s', $sauna_rawtime );
+  if ( ! empty( $ruuvitag_name ) ) {
 
-$makuuhuone_temp = $makuuhuone['last'];
-$makuuhuone_name = $makuuhuone['name'];
-$makuuhuone_rawtime = strtotime( $makuuhuone['time'] . ' UTC' );
-$makuuhuone_time = date( 'H:i:ss', $makuuhuone_rawtime );
+    // Urls
+    if ( 'makuuhuone' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE';
+    } elseif ( 'olohuone' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA';
+    } elseif ( 'lastenhuone' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/FA:D6:C7:D7:93:A8';
+    } elseif ( 'parveke' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/C9:35:08:07:91:89';
+    } elseif ( 'sauna' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/D0:25:AB:39:9E:F1';
+    }
+    ?>
 
-$parveke_temp = $parveke['last'];
-$parveke_name = $parveke['name'];
-$parveke_rawtime = strtotime( $parveke['time'] . ' UTC' );
-$parveke_time = date( 'H:i:s', $parveke_rawtime );
+    <div class="temp">
+      <a href="<?php echo $ruuvitag_url; ?>">
+        <span class="value" data-color="<?php echo $ruuvitag_temp; ?>"><?php echo $ruuvitag_temp; ?> <span class="unit">°C</span></span>
+        <span class="label"><?php echo $ruuvitag_name; ?></span>
+      </a>
+    </div>
 
-$olohuone_temp = $olohuone['last'];
-$olohuone_name = $olohuone['name'];
-$olohuone_rawtime = strtotime( $olohuone['time'] . ' UTC' );
-$olohuone_time = date( 'H:i:s', $olohuone_rawtime );
-?>
-
-<?php if ( ! empty( $parveke_temp ) ) : ?>
-  <div class="temp">
-    <a href="https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA">
-      <span class="value" data-color="<?php echo $parveke_temp; ?>"><?php echo $parveke_temp; ?> <span class="unit">°C</span></span>
-      <span class="label"><?php echo $parveke_name; ?></span>
-    </a>
-  </div>
-<?php endif; ?>
-
-<?php if ( ! empty( $makuuhuone_name ) ) : ?>
-  <div class="temp">
-    <a href="https://station.ruuvi.com/#/D0:25:AB:39:9E:F1">
-      <span class="value" data-color="<?php echo $makuuhuone_temp; ?>"><?php echo $makuuhuone_temp; ?> <span class="unit">°C</span></span>
-      <span class="label"><?php echo $makuuhuone_name; ?></span>
-    </a>
-  </div>
-<?php endif; ?>
-
-<?php if ( ! empty( $olohuone_name ) ) : ?>
-  <div class="temp">
-    <a href="https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE">
-      <span class="value" data-color="<?php echo $olohuone_temp; ?>"><?php echo $olohuone_temp; ?> <span class="unit">°C</span></span>
-      <span class="label"><?php echo $olohuone_name; ?></span>
-    </a>
-  </div>
-<?php endif; ?>
-
-<?php if ( ! empty( $sauna_name ) ) : ?>
-  <div class="temp">
-    <a href="https://station.ruuvi.com/#/C9:35:08:07:91:89">
-      <span class="value" data-color="<?php echo $sauna_temp; ?>"><?php echo $sauna_temp; ?> <span class="unit">°C</span></span>
-      <span class="label"><?php echo $sauna_name; ?></span>
-    </a>
-  </div>
-<?php endif; ?>
+<?php
+  }
+}

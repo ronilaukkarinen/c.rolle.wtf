@@ -7,39 +7,40 @@ require __DIR__ . '/vendor/autoload.php';
 $database = InfluxDB\Client::fromDSN( sprintf( 'influxdb://rolle:FiZG24rG4wmgYqL8LqoxRX2fr37mhs@%s:%s/%s', 'localhost', 8086, 'ruuvi' ) );
 $client = $database->getClient();
 $database = $client->selectDB( 'ruuvi' );
-$result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 1h GROUP BY time(1h), "name" ORDER BY DESC LIMIT 1' );
+$result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 2h GROUP BY time(2h), "name" ORDER BY DESC LIMIT 1' );
 
 $points = $result->getPoints();
 
-// Tags
-$sauna = $points[0];
-$parveke = $points[1];
-$olohuone = $points[2];
-$makuuhuone = $points[3];
+// If empty, print error and don't continue
+if ( empty( $points ) ) {
+  echo '<p style="margin:0;color:#ec1b4b;padding:20px;font-size:32px;font-weight:bolder;">Jokin meni vikaan.</p>';
+  return;
+}
 
-// Display
-$sauna_temp = $sauna['last'];
-$sauna_name = $sauna['name'];
-$sauna_rawtime = strtotime( $sauna['time'] . ' UTC' );
-$sauna_time = date( 'H:i:s', $sauna_rawtime );
+// Loop through tags
+sort( $points );
+foreach ( $points as $point ) {
+  $ruuvitag_temp = round( $point['last'], 2 );
+  $ruuvitag_name = $point['name'];
+  $ruuvitag_timestamp = strtotime( $point['time'] . ' UTC' );
+  $ruuvitag_time = date( 'H:i:s', $timestamp );
 
-$makuuhuone_temp = $makuuhuone['last'];
-$makuuhuone_name = $makuuhuone['name'];
-$makuuhuone_rawtime = strtotime( $makuuhuone['time'] . ' UTC' );
-$makuuhuone_time = date( 'H:i:ss', $makuuhuone_rawtime );
+  if ( ! empty( $ruuvitag_name ) ) {
 
-$parveke_temp = $parveke['last'];
-$parveke_name = $parveke['name'];
-$parveke_rawtime = strtotime( $parveke['time'] . ' UTC' );
-$parveke_time = date( 'H:i:s', $parveke_rawtime );
+    // Urls
+    if ( 'makuuhuone' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE';
+    } elseif ( 'olohuone' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA';
+    } elseif ( 'lastenhuone' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/FA:D6:C7:D7:93:A8';
+    } elseif ( 'parveke' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/C9:35:08:07:91:89';
+    } elseif ( 'sauna' === strtolower( $ruuvitag_name ) ) {
+      $ruuvitag_url = 'https://station.ruuvi.com/#/D0:25:AB:39:9E:F1';
+    }
 
-$olohuone_temp = $olohuone['last'];
-$olohuone_name = $olohuone['name'];
-$olohuone_rawtime = strtotime( $olohuone['time'] . ' UTC' );
-$olohuone_time = date( 'H:i:s', $olohuone_rawtime );
-
-if ( ! empty( $parveke_temp ) ) echo $parveke_name . ': ' . $parveke_temp . ' °C, ';
-if ( ! empty( $makuuhuone_temp ) ) echo $makuuhuone_name . ': ' . $makuuhuone_temp . ' °C, ';
-if ( ! empty( $olohuone_temp ) ) echo $olohuone_name . ': ' . $olohuone_temp . ' °C, ';
-if ( ! empty( $sauna_temp ) ) echo $sauna_name . ': ' . $sauna_temp . ' °C, ';
+    echo $ruuvitag_name . ': ' . $ruuvitag_temp . ' °C, ';
+  }
+}
 echo 'Mitattu: ' . date( 'd.m.Y H:i:s' );
