@@ -121,7 +121,7 @@ var secondtimer = setInterval(function(){
 }, 1000);
 
 jQuery( document ).ready(function() {
-  const seconds = 5;
+  const seconds = 3;
 
   jQuery('.temps').fadeIn();
   jQuery('.temps').load('https://c.rolle.wtf/temps.php');

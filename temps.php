@@ -88,7 +88,7 @@ if ( empty( $points ) ) {
 // Loop through tags
 sort( $points );
 foreach ( $points as $point ) {
-  $ruuvitag_temp = round( $point['last'], 2 );
+  $ruuvitag_temp = number_format((float)($point['last']), 2);
   $ruuvitag_name = $point['name'];
   $ruuvitag_timestamp = strtotime( $point['time'] . ' UTC' );
   $ruuvitag_time = date( 'H:i:s', $timestamp );
