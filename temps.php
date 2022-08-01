@@ -88,21 +88,19 @@ if ( empty( $points ) ) {
 // Loop through tags
 sort( $points );
 foreach ( $points as $point ) {
-  $ruuvitag_temp = number_format((float)($point['last']), 2);
+  $ruuvitag_temp = number_format( (float) ( $point['last'] ), 2 );
   $ruuvitag_name = $point['name'];
-  $ruuvitag_timestamp = strtotime( $point['time'] . ' UTC' );
-  $ruuvitag_time = date( 'H:i:s', $timestamp );
 
-  if ( ! empty( $ruuvitag_name ) ) {
+  if ( ! empty( $ruuvitag_name ) && '0.00' !== $ruuvitag_temp ) {
 
     // Urls
     if ( 'makuuhuone' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/F3:1F:24:E5:A3:DE';
     } elseif ( 'olohuone' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/FB:27:EB:CA:8C:DA';
-    } elseif ( 'lastenhuone' === strtolower( $ruuvitag_name ) ) {
+    } elseif ( 'terassi' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/FA:D6:C7:D7:93:A8';
-    } elseif ( 'parveke' === strtolower( $ruuvitag_name ) ) {
+    } elseif ( 'katto' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/C9:35:08:07:91:89';
     } elseif ( 'sauna' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/D0:25:AB:39:9E:F1';
