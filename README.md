@@ -29,3 +29,12 @@ User=root
 [Install]
 WantedBy=multi-user.target
 ```
+
+#### Change RuuviTags
+
+Edit `/home/rolle/RuuviBridge/config.yml` and restart ruuvibridge.service.
+
+```yml
+tag_names:
+  mac: Terassi
+```

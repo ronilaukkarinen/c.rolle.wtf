@@ -101,7 +101,7 @@ foreach ( $points as $point ) {
     } elseif ( 'terassi' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/FA:D6:C7:D7:93:A8';
     } elseif ( 'katto' === strtolower( $ruuvitag_name ) ) {
-      $ruuvitag_url = 'https://station.ruuvi.com/#/C9:35:08:07:91:89';
+      $ruuvitag_url = 'https://station.ruuvi.com/#/F3:19:89:68:A3:45';
     } elseif ( 'sauna' === strtolower( $ruuvitag_name ) ) {
       $ruuvitag_url = 'https://station.ruuvi.com/#/D0:25:AB:39:9E:F1';
     }
