@@ -183,6 +183,10 @@ foreach ( $points as $point ) {
               <?php
               $result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 1h GROUP BY time(1m), "name" ORDER BY DESC LIMIT 60' );
               $points = $result->getPoints();
+
+              // Reverse array
+              $points = array_reverse( $points );
+
               foreach ( $points as $point ) {
                 echo "'" . date( 'H:i', strtotime( $point['time'] ) ) . "',";
               }
