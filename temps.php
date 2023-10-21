@@ -10,8 +10,8 @@ $(document).ready(function(){
 
   var mc = {
     '-9000to-10': 'freezing',
-    '-10to0'    : 'below-zero',
-    '0to15'     : 'warm-ish',
+    '-10to1'    : 'below-zero',
+    '1.01to15'  : 'warm-ish',
     '15to21.99' : 'just-right',
     '22to900'   : 'warming',
     '25to900'   : 'red',
@@ -93,7 +93,7 @@ foreach ( $points as $point ) {
         // Set colors based on from .freezing to .just-right
         if ( <?php echo $ruuvitag_temp; ?> <= -10 ) {
           var tempcolor = '#96cde4';
-        } else if ( <?php echo $ruuvitag_temp; ?> <= 0 ) {
+        } else if ( <?php echo $ruuvitag_temp; ?> <= 1 ) {
           var tempcolor = '#1b8aec';
         } else if ( <?php echo $ruuvitag_temp; ?> <= 15 ) {
           var tempcolor = '#1bec9f';
