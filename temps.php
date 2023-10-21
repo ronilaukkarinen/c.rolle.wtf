@@ -4,33 +4,7 @@ ini_set( 'display_errors', 0 );
 ini_set( 'display_startup_errors', 0 );
 ?>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-<script>
-  const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-  ];
-
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'My First dataset',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-  };
-
-  const config = {
-    type: 'line',
-    data: data,
-    options: {}
-  };
-</script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
 $(document).ready(function(){
 
@@ -109,9 +83,121 @@ foreach ( $points as $point ) {
 
     <div class="temp">
       <a href="<?php echo $ruuvitag_url; ?>">
-        <span class="value" data-color="<?php echo $ruuvitag_temp; ?>"><?php echo $ruuvitag_temp; ?> <span class="unit">°C</span></span>
         <span class="label"><?php echo $ruuvitag_name; ?></span>
+        <span class="value" data-color="<?php echo $ruuvitag_temp; ?>"><?php echo $ruuvitag_temp; ?> <span class="unit">°C</span></span>
       </a>
+
+      <div id="chart-<?php echo strtolower( $ruuvitag_name ); ?>"></div>
+        <!-- Create custom apexchart for the last hour between 1 minute intervals for the current tag only -->
+        <script>
+        // Set colors based on from .freezing to .just-right
+        if ( <?php echo $ruuvitag_temp; ?> <= -10 ) {
+          var tempcolor = '#96cde4';
+        } else if ( <?php echo $ruuvitag_temp; ?> <= 0 ) {
+          var tempcolor = '#1b8aec';
+        } else if ( <?php echo $ruuvitag_temp; ?> <= 15 ) {
+          var tempcolor = '#1bec9f';
+        } else if ( <?php echo $ruuvitag_temp; ?> <= 21.99 ) {
+          var tempcolor = '#1ccc5c';
+        } else if ( <?php echo $ruuvitag_temp; ?> <= 25 ) {
+          var tempcolor = '#ea7662';
+        } else {
+          var tempcolor = '#ec1b4b';
+        }
+
+        var options = {
+          chart: {
+            height: 150,
+            width: 320,
+            type: 'line',
+            zoom: {
+              enabled: false
+            },
+            toolbar: {
+              show: false
+            },
+            animations: {
+              enabled: false
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          legend: {
+            show: false
+          },
+          stroke: {
+            curve: 'smooth',
+            width: 2,
+            colors: [tempcolor]
+          },
+          tooltip: {
+            enabled: true,
+            theme: 'dark',
+            background: '#1b1b1b'
+          },
+          series: [{
+            name: 'Lämpötila',
+            data: [
+              <?php
+              $result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 1h AND "name" = \'' . $ruuvitag_name . '\' GROUP BY time(1m), "name" ORDER BY DESC LIMIT 60' );
+              $points = $result->getPoints();
+
+              // Reverse array
+              $points = array_reverse( $points );
+
+              foreach ( $points as $point ) {
+                echo $point['last'] . ',';
+              }
+              ?>
+            ]
+          }],
+          grid: {
+            borderColor: 'transparent',
+            row: {
+              colors: ['transparent', 'transparent'],
+              opacity: 0.2
+            }
+          },
+          yaxis: {
+            show: false,
+            lines: {
+              show: false
+            }
+          },
+          xaxis: {
+            lines: {
+              show: false
+            },
+            axisBorder: {
+              show: false
+            },
+            axisTicks: {
+              show: false
+            },
+            labels: {
+              show: false
+            },
+            show: false,
+            categories: [
+              <?php
+              $result = $database->query( 'SELECT last(temperature) FROM ruuvi_measurements WHERE time > now() - 1h GROUP BY time(1m), "name" ORDER BY DESC LIMIT 60' );
+              $points = $result->getPoints();
+              foreach ( $points as $point ) {
+                echo "'" . date( 'H:i', strtotime( $point['time'] ) ) . "',";
+              }
+              ?>
+            ]
+          }
+        }
+
+        var chart = new ApexCharts(
+          document.querySelector("#chart-<?php echo strtolower( $ruuvitag_name ); ?>"),
+          options
+        );
+
+        chart.render();
+      </script>
     </div>
 
 <?php

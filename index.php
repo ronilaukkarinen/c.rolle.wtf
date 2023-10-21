@@ -12,6 +12,7 @@ ini_set('display_startup_errors', 0);
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style type="text/css">
 body {
   background-color: #0d1117;
@@ -38,18 +39,23 @@ a:hover {
 
 .lastupdated,
 .temp {
-  padding: 20px 50px;
+  padding: 20px 30px;
   max-width: 320px;
 }
 
+.temp + .temp {
+  padding-top: 0;
+}
+
 .temp .value {
-  font-size: 80px;
-  font-weight: 700;
+  font-size: 42px;
+  font-weight: 600;
 }
 
 .temp .label {
-  font-size: 14px;
+  font-size: 12px;
   opacity: .5;
+  margin-bottom: 10px;
 }
 
 .lastupdated {
