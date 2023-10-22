@@ -110,6 +110,10 @@ a:hover {
   width: calc(100vw - 80px);
 }
 
+.mobile {
+  width: calc(100vw - 50px);
+}
+
 @media (min-width: 501px) {
   .mobile {
     display: none;

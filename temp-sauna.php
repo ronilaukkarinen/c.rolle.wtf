@@ -103,7 +103,7 @@ if ( empty( $points ) ) {
     var options = {
       chart: {
         height: 150,
-        width: 320,
+            width: 343,
         type: 'line',
         zoom: {
           enabled: false
