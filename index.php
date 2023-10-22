@@ -48,7 +48,7 @@ a:hover {
 }
 
 .temp .value {
-  font-size: 42px;
+  font-size: 80px;
   font-weight: 600;
 }
 
@@ -78,29 +78,49 @@ a:hover {
 
 .freezing {
   color: #96cde4;
+  fill: #96cde4;
 }
 
 .below-zero {
   color: #1b8aec;
+  fill: #1b8aec;
 }
 
 .warm-ish {
   color: #1bec9f;
+  fill: #1bec9f;
 }
 
 .warming {
   color: #ea7662;
+  fill: #ea7662;
 }
 
 .red {
   color: #ec1b4b;
+  fill: #ec1b4b;
 }
 
 .just-right {
   color: #1ccc5c;
+  fill: #1ccc5c;
+}
+
+.desktop {
+  width: calc(100vw - 80px);
+}
+
+@media (min-width: 501px) {
+  .mobile {
+    display: none;
+  }
 }
 
 @media (max-width: 500px) {
+  .desktop {
+    display: none;
+  }
+
   .lastupdated,
   .temp {
     padding: 20px 15px;
@@ -110,11 +130,38 @@ a:hover {
     font-size: 62px;
   }
 }
+
+.apexcharts-tooltip {
+  box-shadow: none !important;
+  background: #000 !important;
+}
+
+.apexcharts-tooltip .apexcharts-tooltip-title {
+  border: 0 !important;
+  background: #000 !important;
+  margin-bottom: 0 !important;
+}
+
+.apexcharts-tooltip-marker {
+  display: none !important;
+}
+
+.apecharts-marker {
+  fill: #0d1117 !important;
+}
 </style>
 
 </head>
 <body>
-  <div class="temps"></div>
+  <div class="temps">
+
+    <div class="temp-makuuhuone"></div>
+    <div class="temp-katto"></div>
+    <div class="temp-olohuone"></div>
+    <div class="temp-terassi"></div>
+    <div class="temp-sauna"></div>
+
+  </div>
 
   <p class="lastupdated"><span class="text">Viimeksi päivitetty</span> <span class="time"><span class="timestamp" id="value">0</span> s</span> <span class="text">sitten</span></p>
 
@@ -130,13 +177,23 @@ jQuery( document ).ready(function() {
   const seconds = 1;
 
   jQuery('.temps').fadeIn();
-  jQuery('.temps').load('https://c.rolle.wtf/temps.php');
+  jQuery('.temp-makuuhuone').load('https://c.rolle.wtf/temp-makuuhuone.php');
+  jQuery('.temp-katto').load('https://c.rolle.wtf/temp-katto.php');
+  jQuery('.temp-olohuone').load('https://c.rolle.wtf/temp-olohuone.php');
+  jQuery('.temp-terassi').load('https://c.rolle.wtf/temp-terassi.php');
+  jQuery('.temp-sauna').load('https://c.rolle.wtf/temp-sauna.php');
 
-  var refreshId = setInterval(function() {
-    jQuery(".temps").load('https://c.rolle.wtf/temps.php');
+  // Load data separately for x seconds with .load from temp-<tag>.php
+  setInterval(function(){
+    jQuery('.temp-makuuhuone').load('https://c.rolle.wtf/temp-makuuhuone.php');
+    jQuery('.temp-katto').load('https://c.rolle.wtf/temp-katto.php');
+    jQuery('.temp-olohuone').load('https://c.rolle.wtf/temp-olohuone.php');
+    jQuery('.temp-terassi').load('https://c.rolle.wtf/temp-terassi.php');
+    jQuery('.temp-sauna').load('https://c.rolle.wtf/temp-sauna.php');
     document.getElementById('value').innerHTML = '0';
     current = 0
-  }, seconds * 1000);
+  }, seconds * 5000);
+
 });
 </script>
 </body>
