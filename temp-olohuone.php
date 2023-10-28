@@ -223,7 +223,7 @@ if ( empty( $points ) ) {
       },
       stroke: {
         curve: 'smooth',
-        width: 2,
+        width: 4,
         colors: [tempcolor]
       },
       tooltip: {
@@ -256,8 +256,6 @@ if ( empty( $points ) ) {
         }
       },
       yaxis: {
-        min: 15,
-        max: 30,
         show: false,
         lines: {
           show: false
