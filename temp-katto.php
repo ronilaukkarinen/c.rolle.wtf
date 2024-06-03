@@ -142,7 +142,9 @@ if ( empty( $points ) ) {
           $points = array_reverse( $points );
 
           foreach ( $points as $point ) {
-            echo $point['last'] . ',';
+            if ( ! empty( $point['last'] ) ) {
+              echo $point['last'] . ',';
+            }
           }
           ?>
         ]
@@ -183,7 +185,9 @@ if ( empty( $points ) ) {
           $points = array_reverse( $points );
 
           foreach ( $points as $point ) {
-            echo "'" . date( 'H:i', strtotime( $point['time'] ) ) . "',";
+            if ( ! empty( $point['last'] ) ) {
+              echo "'" . date( 'H:i', strtotime( $point['time'] ) ) . "',";
+            }
           }
           ?>
         ]
@@ -243,7 +247,9 @@ if ( empty( $points ) ) {
           $points = array_reverse( $points );
 
           foreach ( $points as $point ) {
-            echo $point['last'] . ',';
+            if ( ! empty( $point['last'] ) ) {
+              echo $point['last'] . ',';
+            }
           }
           ?>
         ]
@@ -285,7 +291,9 @@ if ( empty( $points ) ) {
           $points = array_reverse( $points );
 
           foreach ( $points as $point ) {
-            echo "'" . date( 'H:i', strtotime( $point['time'] ) ) . "',";
+            if ( ! empty( $point['last'] ) ) {
+              echo "'" . date( 'H:i', strtotime( $point['time'] ) ) . "',";
+            }
           }
           ?>
         ]
