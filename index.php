@@ -196,7 +196,7 @@ jQuery( document ).ready(function() {
     jQuery('.temp-sauna').load('https://c.rolle.wtf/temp-sauna.php');
     document.getElementById('value').innerHTML = '0';
     current = 0
-  }, seconds * 5000);
+  }, seconds * 1000);
 
 });
 </script>
