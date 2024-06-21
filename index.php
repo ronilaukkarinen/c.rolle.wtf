@@ -178,7 +178,7 @@ var secondtimer = setInterval(function(){
 }, 1000);
 
 jQuery( document ).ready(function() {
-  const seconds = 1;
+  const seconds = 10;
 
   jQuery('.temps').fadeIn();
   jQuery('.temp-makuuhuone').load('https://c.rolle.wtf/temp-makuuhuone.php');
